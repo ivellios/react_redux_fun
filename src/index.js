@@ -1,7 +1,23 @@
-import 'core-js/fn/object/assign';
+import 'babel-polyfill';
 import React from 'react';
-import ReactDOM from 'react-dom';
-import App from './components/Main';
+import ReactDOM from "react-dom";
+import {Provider} from 'react-redux';
+import {createStore, applyMiddleware} from 'redux';
+import thunk from 'redux-thunk';
+import promise from 'redux-promise';
+import {createLogger} from 'redux-logger';
+import allReducers from './reducers';
+import App from './components/app';
 
-// Render the main component into the dom
-ReactDOM.render(<App />, document.getElementById('app'));
+const logger = createLogger();
+const store = createStore(
+    allReducers,
+    applyMiddleware(thunk, promise, logger)
+);
+
+ReactDOM.render(
+    <Provider store={store}>
+        <App />
+    </Provider>,
+    document.getElementById('root')
+);
